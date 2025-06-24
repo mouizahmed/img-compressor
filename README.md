@@ -1,2 +1,7 @@
 # img-compressor
-🖼️ Fast quad-tree based image compression CLI
+
+Fast and efficient quad-tree based image compression CLI made in Rust.
+
+
+# Acknowledgements
+- [QuadTreeImageCompression](https://github.com/Inspiaaa/QuadTreeImageCompression)
