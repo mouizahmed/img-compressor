@@ -1,12 +1,8 @@
 use std::ops::{Add, Sub};
 
-pub trait Zero {
-    fn zero() -> Self;
-}
-
 pub struct PrefixSumMatrix<T>
 where 
-    T: Add<Output = T> + Sub<Output = T> + Zero + Clone + Copy,
+    T: Add<Output = T> + Sub<Output = T> + Default + Clone + Copy,
 {
     height: usize,
     width: usize,
@@ -15,23 +11,23 @@ where
 
 impl<T> PrefixSumMatrix<T>
 where
-    T: Add<Output = T> + Sub<Output = T> + Zero + Clone + Copy,
+    T: Add<Output = T> + Sub<Output = T> + Default + Clone + Copy,
 {
-    pub fn new(grid: &Vec<Vec<T>>) -> Result<Self, String> {
-        let height = grid.len();
-        let width = match grid.first() {
+    pub fn new(matrix: &Vec<Vec<T>>) -> Result<Self, String> {
+        let height = matrix.len();
+        let width = match matrix.first() {
             Some(row) => row.len(),
-            None => return Err("Empty array".into()),
+            None => return Err("Empty matrix".into()),
         };
         
         if width == 0 {
-            return Err("Grid has no columns".into());
+            return Err("Matrix has no columns".into());
         }
         
-        let mut data = vec![vec![T::zero(); width + 1]; height + 1];
+        let mut data = vec![vec![T::default(); width + 1]; height + 1];
         for i in 0..height {
             for j in 0..width {
-                data[i + 1][j + 1] = data[i][j + 1] + data[i + 1][j] - data[i][j] + grid[i][j];
+                data[i + 1][j + 1] = data[i][j + 1] + data[i + 1][j] - data[i][j] + matrix[i][j];
             }
         }
 
@@ -55,8 +51,4 @@ where
         let (x2, y2) = bottom_right;
         self.data[x2 + 1][y2 + 1] - self.data[x2 + 1][y1] - self.data[x1][y2 + 1] + self.data[x1][y1]
     }
-    
-
-
-
 }
