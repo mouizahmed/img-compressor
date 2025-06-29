@@ -53,6 +53,8 @@ fn main() {
         }
     };
 
+    println!("Output file: {}", output_file);
+
     let data = match ImageData::from_path(&args.input_file) {
         Ok(data) => data,
         Err(e) => {

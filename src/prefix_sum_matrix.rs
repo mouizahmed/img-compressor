@@ -1,6 +1,5 @@
 use std::ops::{Add, Sub};
 
-// Add Zero trait for better semantic meaning
 pub trait Zero {
     fn zero() -> Self;
 }
