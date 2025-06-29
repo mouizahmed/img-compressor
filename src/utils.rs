@@ -1,7 +1,7 @@
-use image::Rgb;
-use std::path::{Path, PathBuf};
+use crate::image_processor::RGB;
+use std::path::Path;
 
-pub fn hex_to_rgb(hex: &str) -> Result<Rgb<u8>, String> {
+pub fn hex_to_rgb(hex: &str) -> Result<RGB<u8>, String> {
     let hex = hex.trim_start_matches('#');
     
     if hex.len() != 6 { 
@@ -12,7 +12,7 @@ pub fn hex_to_rgb(hex: &str) -> Result<Rgb<u8>, String> {
     let g = u8::from_str_radix(&hex[2..4], 16).map_err(|e| e.to_string())?;
     let b = u8::from_str_radix(&hex[4..6], 16).map_err(|e| e.to_string())?;
 
-    Ok(Rgb([r, g, b]))
+    Ok(RGB::new(r, g, b))
 }
 
 pub fn ensure_valid_output_file(output_file: &str, input_file: &str, gif: bool) -> Result<String, String> {

@@ -17,7 +17,7 @@ fn main() {
     let outline_rgb = if let Some(outline_hex) = &args.outline {
         match hex_to_rgb(outline_hex) {
             Ok(rgb) => {
-                println!("Outline color: {} -> RGB({}, {}, {})", outline_hex, rgb[0], rgb[1], rgb[2]);
+                println!("Outline color: {} -> RGB({}, {}, {})", outline_hex, rgb.r, rgb.g, rgb.b);
                 Some(rgb)
             }
             Err(e) => {
