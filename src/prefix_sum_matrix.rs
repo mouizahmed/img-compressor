@@ -1,8 +1,13 @@
 use std::ops::{Add, Sub};
 
+// Add Zero trait for better semantic meaning
+pub trait Zero {
+    fn zero() -> Self;
+}
+
 pub struct PrefixSumMatrix<T>
 where 
-    T: Add<Output = T> + Sub<Output = T> + Default + Clone + Copy,
+    T: Add<Output = T> + Sub<Output = T> + Zero + Clone + Copy,
 {
     height: usize,
     width: usize,
@@ -11,7 +16,7 @@ where
 
 impl<T> PrefixSumMatrix<T>
 where
-    T: Add<Output = T> + Sub<Output = T> + Default + Clone + Copy,
+    T: Add<Output = T> + Sub<Output = T> + Zero + Clone + Copy,
 {
     pub fn new(matrix: &Vec<Vec<T>>) -> Result<Self, String> {
         let height = matrix.len();
@@ -24,7 +29,7 @@ where
             return Err("Matrix has no columns".into());
         }
         
-        let mut data = vec![vec![T::default(); width + 1]; height + 1];
+        let mut data = vec![vec![T::zero(); width + 1]; height + 1];
         for i in 0..height {
             for j in 0..width {
                 data[i + 1][j + 1] = data[i][j + 1] + data[i + 1][j] - data[i][j] + matrix[i][j];

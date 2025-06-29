@@ -1,14 +1,33 @@
 mod cli;
 mod utils;
+mod image_processor;
+mod prefix_sum_matrix;
 
 use cli::parse_args;
-use utils::{default_output_file, ensure_valid_output_file};
+use image_processor::ImageData;
+use utils::{default_output_file, ensure_valid_output_file, hex_to_rgb};
 
 fn main() {
     let args = parse_args();
     
     println!("Image Compressor");
     println!("Input file: {}", args.input_file);
+
+    // Convert outline hex to RGB if provided
+    let outline_rgb = if let Some(outline_hex) = &args.outline {
+        match hex_to_rgb(outline_hex) {
+            Ok(rgb) => {
+                println!("Outline color: {} -> RGB({}, {}, {})", outline_hex, rgb[0], rgb[1], rgb[2]);
+                Some(rgb)
+            }
+            Err(e) => {
+                eprintln!("Error parsing outline color '{}': {}", outline_hex, e);
+                std::process::exit(1);
+            }
+        }
+    } else {
+        None
+    };
     
     // Handle output file validation
     let output_file = if let Some(user_output) = &args.output_file {
@@ -34,16 +53,13 @@ fn main() {
         }
     };
 
-    println!("Output file: {}", output_file);
-    println!("Iterations: {}", args.iterations);
-    
-    if let Some(outline) = &args.outline {
-        println!("Outline color: {}", outline);
-    }
-    
-    if let Some(delta) = args.gif_delta {
-        println!("GIF delta: {}", delta);
-    }
+    let data = match ImageData::from_path(&args.input_file) {
+        Ok(data) => data,
+        Err(e) => {
+            eprintln!("Error processing image: {}", e);
+            std::process::exit(1);
+        }
+    };
     
     // TODO: Add image compression logic here
     println!("Processing image...");
