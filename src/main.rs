@@ -55,6 +55,7 @@ fn main() {
 
     println!("Output file: {}", output_file);
 
+    // Load image data
     let data = match ImageData::from_path(&args.input_file) {
         Ok(data) => data,
         Err(e) => {
@@ -62,7 +63,6 @@ fn main() {
             std::process::exit(1);
         }
     };
-    
-    // TODO: Add image compression logic here
-    println!("Processing image...");
+
+    // Process image
 }
