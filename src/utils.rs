@@ -1,10 +1,11 @@
 use crate::image_processor::RGB;
+use std::io::{self, Write};
 use std::path::Path;
 
 pub fn hex_to_rgb(hex: &str) -> Result<RGB<u8>, String> {
     let hex = hex.trim_start_matches('#');
-    
-    if hex.len() != 6 { 
+
+    if hex.len() != 6 {
         return Err("Invalid hex color".into());
     }
 
@@ -15,32 +16,71 @@ pub fn hex_to_rgb(hex: &str) -> Result<RGB<u8>, String> {
     Ok(RGB::new(r, g, b))
 }
 
-pub fn ensure_valid_output_file(output_file: &str, input_file: &str, gif: bool) -> Result<String, String> {
+pub fn print_progress(current: usize, total: usize, step_name: &str) {
+    let percentage = (current as f32 / total as f32 * 100.0) as usize;
+    let bar_width = 30;
+    let filled = (current as f32 / total as f32 * bar_width as f32) as usize;
+    let empty = bar_width - filled;
+
+    print!(
+        "\r{}: [{}{}] {}% ({}/{})",
+        step_name,
+        "█".repeat(filled),
+        "░".repeat(empty),
+        percentage,
+        current,
+        total
+    );
+    io::stdout().flush().unwrap();
+
+    if current == total {
+        println!(); // New line when complete
+    }
+}
+
+pub fn print_step(message: &str) {
+    print!("{}...", message);
+    io::stdout().flush().unwrap();
+}
+
+pub fn print_success() {
+    println!(" ✓ Complete");
+}
+
+pub fn print_failure() {
+    println!(" ✗ Failed");
+}
+
+pub fn ensure_valid_output_file(
+    output_file: &str,
+    input_file: &str,
+    gif: bool,
+) -> Result<String, String> {
     let output_path = Path::new(output_file);
     let input_path = Path::new(input_file);
-    
+
     let input_extension = input_path
         .extension()
         .and_then(|ext| ext.to_str())
         .ok_or_else(|| format!("Input file '{}' has no valid extension", input_file))?;
-    
+
     let output_stem = output_path
         .file_stem()
         .and_then(|stem| stem.to_str())
         .ok_or_else(|| format!("Invalid output file path: '{}'", output_file))?;
-    
+
     let parent_dir = output_path.parent().unwrap_or_else(|| Path::new("."));
-    
+
     let target_extension = if gif {
         "gif"
     } else {
         &input_extension.to_lowercase()
     };
-    
+
     let mut corrected_path = parent_dir.to_path_buf();
     corrected_path.push(output_stem);
     corrected_path.set_extension(target_extension);
-    
+
     corrected_path
         .to_str()
         .map(|s| s.to_string())
@@ -49,12 +89,12 @@ pub fn ensure_valid_output_file(output_file: &str, input_file: &str, gif: bool) 
 
 pub fn default_output_file(input_file: &str, gif: bool) -> Result<String, String> {
     let input_path = Path::new(input_file);
-    
+
     let stem = input_path
         .file_stem()
         .and_then(|stem| stem.to_str())
         .ok_or_else(|| format!("Input file '{}' has no valid filename", input_file))?;
-    
+
     let extension = input_path
         .extension()
         .and_then(|ext| ext.to_str())
@@ -63,13 +103,13 @@ pub fn default_output_file(input_file: &str, gif: bool) -> Result<String, String
     let parent_dir = input_path.parent().unwrap_or_else(|| Path::new(""));
     let mut out_path = parent_dir.to_path_buf();
     out_path.push(format!("{}-compressed", stem));
-    
+
     if gif {
         out_path.set_extension("gif");
     } else {
         out_path.set_extension(extension.to_lowercase());
     }
-    
+
     out_path
         .to_str()
         .map(|s| s.to_string())

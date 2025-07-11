@@ -451,6 +451,7 @@ name = "img-compressor"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "gif",
  "image",
 ]
 

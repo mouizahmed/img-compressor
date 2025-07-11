@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Div, Mul};
+use std::ops::{Add, Div, Mul, Sub};
 
 use crate::prefix_sum_matrix::{PrefixSumMatrix, Zero};
 
@@ -72,10 +72,10 @@ pub struct ImageData {
 
 impl ImageData {
     pub fn new(data: &Vec<Vec<RGB<u64>>>) -> Result<Self, String> {
-        let sums = PrefixSumMatrix::new(&data)?;
+        let sums = PrefixSumMatrix::new(data)?;
         let squares = data
-            .into_iter()
-            .map(|row| row.into_iter().map(|x| x.comp_prod(*x)).collect())
+            .iter()
+            .map(|row| row.iter().map(|x| x.comp_prod(*x)).collect())
             .collect();
         let square_sums = PrefixSumMatrix::new(&squares)?;
         Ok(Self {
@@ -131,15 +131,17 @@ impl ImageData {
         let (x1, y1) = top_left;
         let (x2, y2) = bottom_right;
         let area = ((x2 - x1 + 1) * (y2 - y1 + 1)) as u64;
-        
+
         let mean = self.average(top_left, bottom_right);
         let square_sum = self.square_sum(top_left, bottom_right);
-        
-        let variance = square_sum / area - mean.comp_prod(mean);
-        
-        let variance_r = if variance.r > 0 { variance.r } else { 0 };
-        let variance_g = if variance.g > 0 { variance.g } else { 0 };
-        let variance_b = if variance.b > 0 { variance.b } else { 0 };
+
+        let mean_squared = mean.comp_prod(mean);
+        let square_avg = square_sum / area;
+
+        // Use saturating subtraction to prevent overflow
+        let variance_r = square_avg.r.saturating_sub(mean_squared.r);
+        let variance_g = square_avg.g.saturating_sub(mean_squared.g);
+        let variance_b = square_avg.b.saturating_sub(mean_squared.b);
 
         (variance_r + variance_g + variance_b) * area
     }
