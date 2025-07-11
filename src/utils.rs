@@ -87,7 +87,13 @@ pub fn ensure_valid_output_file(
         .ok_or_else(|| "Failed to convert path to string".to_string())
 }
 
-pub fn default_output_file(input_file: &str, gif: bool) -> Result<String, String> {
+pub fn default_output_file(
+    input_file: &str,
+    gif: bool,
+    iterations: u32,
+    has_outline: bool,
+    gif_delta: Option<u32>,
+) -> Result<String, String> {
     let input_path = Path::new(input_file);
 
     let stem = input_path
@@ -102,7 +108,19 @@ pub fn default_output_file(input_file: &str, gif: bool) -> Result<String, String
 
     let parent_dir = input_path.parent().unwrap_or_else(|| Path::new(""));
     let mut out_path = parent_dir.to_path_buf();
-    out_path.push(format!("{}-compressed", stem));
+
+    let filename = match (gif, gif_delta, has_outline) {
+        (true, Some(delta), true) => {
+            format!("{}-compressed-{}-delta{}-outline", stem, iterations, delta)
+        }
+        (true, Some(delta), false) => format!("{}-compressed-{}-delta{}", stem, iterations, delta),
+        (true, None, true) => format!("{}-compressed-{}-outline", stem, iterations),
+        (true, None, false) => format!("{}-compressed-{}", stem, iterations),
+        (false, _, true) => format!("{}-compressed-{}-outline", stem, iterations),
+        (false, _, false) => format!("{}-compressed-{}", stem, iterations),
+    };
+
+    out_path.push(filename);
 
     if gif {
         out_path.set_extension("gif");

@@ -58,7 +58,13 @@ fn main() {
             }
         }
     } else {
-        match default_output_file(&args.input_file, args.gif_delta.is_some()) {
+        match default_output_file(
+            &args.input_file,
+            args.gif_delta.is_some(),
+            args.iterations,
+            args.outline.is_some(),
+            args.gif_delta,
+        ) {
             Ok(default_path) => default_path,
             Err(e) => {
                 eprintln!("Error generating default output file: {}", e);
