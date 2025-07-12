@@ -14,6 +14,17 @@ Fast and efficient quad-tree based image compression CLI made in Rust.
 - 📹 **Animated**: Generate GIFs showing the compression process
 - 🔧 **CLI**: Simple command-line interface
 
+<div align="center">
+
+https://github.com/user-attachments/assets/48412f55-83f8-4447-abed-4b5e09fdf3a4
+
+</div>    
+
+
+
+
+
+
 ## Examples
 
 |original | 100 Iterations           | 1,000 Iterations          | 20,000 Iterations          |
@@ -25,7 +36,12 @@ Fast and efficient quad-tree based image compression CLI made in Rust.
 
 ### From Source
 ```bash
-git clone https://github.com/mouizahmed/img-compressor.git
+
+https://github.com/user-attachments/assets/b5ac218d-9e04-45b6-b4ab-cb1b01f47f4b
+
+
+git clone https://gith![demo-compressed-5000](https://github.com/user-attachments/assets/ece30e66-ed83-433d-9c11-fc01351e9316)
+ub.com/mouizahmed/img-compressor.git
 cd img-compressor
 cargo build --release
 ```
