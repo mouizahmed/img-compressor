@@ -66,7 +66,7 @@ Where:
 ## Examples
 
 |original | 100 Iterations           | 1,000 Iterations          | 20,000 Iterations          |
-| ------------------------ | ------------------------ | ------------------------- | -------------------------- |
+| :---: | :---: | :---: | :---: |
 | ![](images/example1/cat.jpg) | ![](images/example1/cat-compressed-100.jpg)  | ![](images/example1/cat-compressed-1000.jpg)  | ![](images/example1/cat-compressed-20000.jpg)  |
 | 3.1 MB | 524 KB | 712 KB | 1.1 MB |
 
@@ -74,23 +74,24 @@ Where:
 
 The following images with outlines shows how the algorithm prioritizes splitting up regions with the highest color variance first. Notice how the algorithm prioritizes splitting regions covering the cat's fur and facial features, as well as the more detailed and colorful areas of the background, while leaving the uniform, solid-colored background sections as large unsplit blocks.
 
-| ![](images/example1/cat-compressed-10-outline.jpg) | ![](images/example1/cat-compressed-100-outline.jpg) | ![](images/example1/cat-compressed-1000-outline.jpg) |
-| :---: | :---: | :---: |
 | 10 iterations | 100 iterations | 1,000 iterations |
+| :---: | :---: | :---: |
+| ![](images/example1/cat-compressed-10-outline.jpg) | ![](images/example1/cat-compressed-100-outline.jpg) | ![](images/example1/cat-compressed-1000-outline.jpg) |
 
 ### Speed + Size
 
 This example demonstrates the speed and efficiency of the program. Notice how the speed of the program scales efficiently with processing 20x more iterations only taking 12% longer, demonstrating the algorithms logarithmic time complexity. Additionally, more iterations produce higher quality results with larger file sizes due to the additional quad-tree subdivisions.
 
-| ![](images/example2/city.jpg) | ![](images/example2/city-compressed-5000.jpg) | ![](images/example2/city-compressed-100000.jpg) |
+| original image | 5,000 iterations | 100,000 iterations |
 | :---: | :---: | :---: |
-| original image, 6235 by 9353 pixels (6.91 MB) | 5,000 iterations, 6.8 seconds (2.52 MB) | 100,000 iterations, in 7.6 seconds (4.15 MB) |
+| ![](images/example2/city.jpg) | ![](images/example2/city-compressed-5000.jpg) | ![](images/example2/city-compressed-100000.jpg) |
+| 6235 by 9353 pixels (6.91 MB) | 6.8 seconds (2.52 MB) | 7.6 seconds (4.15 MB) |
 
 ### GIF Example
 
-| ![](images/example3/fish.jpg) | ![](images/example3/fish-compressed-100-outline.jpg)| ![](images/example3/fish-compressed-1000.jpg) | ![](images/example3/fish-compressed-500-delta10.gif) |
-| :---: | :---: | :---: | :---: |
 | original gif | 100 iterations (outlined) | 1000 iterations | an animation of the process up to 500 iterations (delta 10 - 50 frames) |
+| :---: | :---: | :---: | :---: |
+| ![](images/example3/fish.jpg) | ![](images/example3/fish-compressed-100-outline.jpg)| ![](images/example3/fish-compressed-1000.jpg) | ![](images/example3/fish-compressed-500-delta10.gif) |
 
 ## Installation
 
