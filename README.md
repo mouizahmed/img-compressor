@@ -20,17 +20,16 @@ https://github.com/user-attachments/assets/48412f55-83f8-4447-abed-4b5e09fdf3a4
 
 </div>    
 
-
-
-
-
-
 ## Examples
 
 |original | 100 Iterations           | 1,000 Iterations          | 20,000 Iterations          |
 | ------------------------ | ------------------------ | ------------------------- | -------------------------- |
 | ![](images/example1/cat.jpg) | ![](images/example1/cat-compressed-100.jpg)  | ![](images/example1/cat-compressed-1000.jpg)  | ![](images/example1/cat-compressed-20000.jpg)  |
 | 3.1 MB | 524 KB | 712 KB | 1.1 MB |
+
+| ![](images/example1/cat-compressed-10-outline.jpg) | ![](images/example1/cat-compressed-100-outline.jpg) | ![](images/example1/cat-compressed-1000-outline.jpg) |
+| :---: | :---: | :---: |
+| 10 iterations | 100 iterations | 1,000 iterations |
 
 ## Installation
 
