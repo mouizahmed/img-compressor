@@ -6,17 +6,6 @@ Fast and efficient quad-tree based image compression CLI made in Rust.
 
 `img-compressor` uses a quad-tree algorithm to compress images by iteratively subdividing regions based on color variance. The tool can generate both static compressed images and animated GIFs showing the compression process.
 
-## Features
-
-- 🚀 **Fast**: Built in Rust with optimized algorithms and O(1) variance queries using prefix sum matrices
-- 🎯 **Configurable**: Control compression level with iteration count
-- 🎨 **Visual**: Optional outline rendering to show quad-tree structure  
-- 📹 **Animated**: Generate GIFs showing the compression process and compress existing GIF files
-- 🔧 **CLI**: Simple command-line interface
-- ⚡ **Optimal splitting**: Uses priority queue (max-heap) to always split highest variance regions first
-- 🖼️ **Efficient rendering**: Breadth-first traversal for fast image generation
-- 🛡️ **Memory safe**: Rust implementation with no runtime errors
-
 <div align="center">
 
 https://github.com/user-attachments/assets/48412f55-83f8-4447-abed-4b5e09fdf3a4
