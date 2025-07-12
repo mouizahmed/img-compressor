@@ -117,7 +117,7 @@ OPTIONS:
     --iterations <N>        Number of refinement iterations
     --output-file <FILE>    Output file path (optional)
     --outline <HEX>         Outline color in hex format (e.g. #000000) (optional)
-    --gif-delta <N>         Save algorithm process to GIF, frame every N iterations
+    --gif-delta <N>         Save algorithm process to GIF, frame every N iterations (optional)
     -h, --help              Print help information
 ```
 
