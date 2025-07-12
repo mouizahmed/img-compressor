@@ -8,17 +8,69 @@ Fast and efficient quad-tree based image compression CLI made in Rust.
 
 ## Features
 
-- 🚀 **Fast**: Built in Rust with optimized algorithms
+- 🚀 **Fast**: Built in Rust with optimized algorithms and O(1) variance queries using prefix sum matrices
 - 🎯 **Configurable**: Control compression level with iteration count
 - 🎨 **Visual**: Optional outline rendering to show quad-tree structure  
-- 📹 **Animated**: Generate GIFs showing the compression process
+- 📹 **Animated**: Generate GIFs showing the compression process and compress existing GIF files
 - 🔧 **CLI**: Simple command-line interface
+- ⚡ **Optimal splitting**: Uses priority queue (max-heap) to always split highest variance regions first
+- 🖼️ **Efficient rendering**: Breadth-first traversal for fast image generation
+- 🛡️ **Memory safe**: Rust implementation with no runtime errors
 
 <div align="center">
 
 https://github.com/user-attachments/assets/48412f55-83f8-4447-abed-4b5e09fdf3a4
 
-</div>    
+</div>  
+
+## Algorithm Details
+
+The quad-tree compression algorithm works by:
+
+1. **Initial State**: Start with the entire image as a single region
+2. **Variance Calculation**: Calculate color variance for each region using prefix sum matrices for O(1) queries
+3. **Priority Selection**: Use a max-heap to always split the region with highest variance
+4. **Subdivision**: Split selected regions into 4 quadrants
+5. **Iteration**: Repeat until desired number of iterations
+
+### Time Complexity Analysis
+
+**Overall Time Complexity: `O(W × H + k × log k)`**
+
+Where:
+- `W × H` = image dimensions (width × height)
+- `k` = number of iterations
+
+#### Breakdown by Phase:
+
+**1. Image Loading & Preprocessing: `O(W × H)`**
+- Read and convert each pixel: `O(W × H)`
+- Build prefix sum matrices: `O(W × H)`
+- Build squared prefix sums: `O(W × H)`
+
+**2. Per-Iteration Processing: `O(log k)`**
+- Priority queue operations: `O(log k)` for heap operations
+- Variance calculations: `O(1)` per query (4 queries per iteration)
+- Node splitting and storage: `O(1)`
+
+**3. Final Rendering: `O(W × H)`**
+- Traverse quad-tree and render pixels: `O(W × H)`
+
+#### Performance Characteristics:
+
+- **Typical usage**: Dominated by `O(W × H)` - image processing is the bottleneck
+- **Very large iteration counts**: Still efficient due to `log k` growth in quad-tree operations
+- **Scaling**: Doubling iterations doesn't double the work due to logarithmic growth
+
+#### Comparison to Naive Approach:
+- **Naive variance calculation**: `O(k × W × H)` total
+- **This implementation**: `O(W × H + k × log k)` total
+- **Speedup**: Massive improvement for large k or large images
+
+**Space Complexity: `O(W × H + k)`**
+- Image data and prefix sums: `O(W × H)`
+- Quad-tree nodes: `O(k)`
+- Priority queue: `O(k)`  
 
 ## Examples
 
@@ -47,12 +99,7 @@ This example demonstrates the speed and efficiency of the program. Notice how th
 
 ### From Source
 ```bash
-
-https://github.com/user-attachments/assets/b5ac218d-9e04-45b6-b4ab-cb1b01f47f4b
-
-
-git clone https://gith![demo-compressed-5000](https://github.com/user-attachments/assets/ece30e66-ed83-433d-9c11-fc01351e9316)
-ub.com/mouizahmed/img-compressor.git
+git clone https://github.com/mouizahmed/img-compressor.git
 cd img-compressor
 cargo build --release
 ```
@@ -113,61 +160,6 @@ OPTIONS:
 ./img-compressor input.jpg --iterations 30 --gif-delta 3 --outline "#FFFFFF" --output-file outlined.gif
 ```
 
-## Algorithm Details
-
-The quad-tree compression algorithm works by:
-
-1. **Initial State**: Start with the entire image as a single region
-2. **Variance Calculation**: Calculate color variance for each region using prefix sum matrices for O(1) queries
-3. **Priority Selection**: Use a max-heap to always split the region with highest variance
-4. **Subdivision**: Split selected regions into 4 quadrants
-5. **Iteration**: Repeat until desired number of iterations
-
-### Key Features:
-- **O(1) variance queries** using prefix sum matrices
-- **Optimal splitting** using priority queue (max-heap)
-- **Efficient rendering** with breadth-first traversal
-- **Memory safe** implementation in Rust
-
-### Time Complexity Analysis
-
-**Overall Time Complexity: `O(W × H + k × log k)`**
-
-Where:
-- `W × H` = image dimensions (width × height)
-- `k` = number of iterations
-
-#### Breakdown by Phase:
-
-**1. Image Loading & Preprocessing: `O(W × H)`**
-- Read and convert each pixel: `O(W × H)`
-- Build prefix sum matrices: `O(W × H)`
-- Build squared prefix sums: `O(W × H)`
-
-**2. Per-Iteration Processing: `O(log k)`**
-- Priority queue operations: `O(log k)` for heap operations
-- Variance calculations: `O(1)` per query (4 queries per iteration)
-- Node splitting and storage: `O(1)`
-
-**3. Final Rendering: `O(W × H)`**
-- Traverse quad-tree and render pixels: `O(W × H)`
-
-#### Performance Characteristics:
-
-- **Typical usage**: Dominated by `O(W × H)` - image processing is the bottleneck
-- **Very large iteration counts**: Still efficient due to `log k` growth in quad-tree operations
-- **Scaling**: Doubling iterations doesn't double the work due to logarithmic growth
-
-#### Comparison to Naive Approach:
-- **Naive variance calculation**: `O(k × W × H)` total
-- **This implementation**: `O(W × H + k × log k)` total
-- **Speedup**: Massive improvement for large k or large images
-
-**Space Complexity: `O(W × H + k)`**
-- Image data and prefix sums: `O(W × H)`
-- Quad-tree nodes: `O(k)`
-- Priority queue: `O(k)`
-
 ## Performance Tips
 
 - **Always use release mode**: `cargo run --release`
@@ -177,7 +169,7 @@ Where:
 
 ## File Format Support
 
-**Input formats:** JPEG, PNG, BMP, TIFF, WebP, and other formats supported by the `image` crate
+**Input formats:** JPEG, PNG, BMP, TIFF, WebP, GIF, and other formats supported by the `image` crate
 
 **Output formats:** 
 - Static: JPEG, PNG (determined by input format or --output-file extension)
