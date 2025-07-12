@@ -27,9 +27,21 @@ https://github.com/user-attachments/assets/48412f55-83f8-4447-abed-4b5e09fdf3a4
 | ![](images/example1/cat.jpg) | ![](images/example1/cat-compressed-100.jpg)  | ![](images/example1/cat-compressed-1000.jpg)  | ![](images/example1/cat-compressed-20000.jpg)  |
 | 3.1 MB | 524 KB | 712 KB | 1.1 MB |
 
+### Images with outlines
+
+The algorithm prioritizes splitting up regions covering the cat and its fur, which have more detail and color variation compared to the uniform background.
+
 | ![](images/example1/cat-compressed-10-outline.jpg) | ![](images/example1/cat-compressed-100-outline.jpg) | ![](images/example1/cat-compressed-1000-outline.jpg) |
 | :---: | :---: | :---: |
 | 10 iterations | 100 iterations | 1,000 iterations |
+
+### Speed + Size
+
+This example demonstrates the speed and efficiency of the program.
+
+| ![](images/example2/city.jpg) | ![](images/example2/city-compressed-5000.jpg) | ![](images/example2/city-compressed-100000.jpg) |
+| :---: | :---: | :---: |
+| original image, 6235 by 9353 pixels (6.91 MB) | 5,000 iterations, 6.8 seconds (2.52 MB) | 100,000 iterations, in 7.6 seconds (4.15 MB) |
 
 ## Installation
 
