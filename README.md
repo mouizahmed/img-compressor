@@ -53,6 +53,8 @@ Where:
 - Variance calculations: `O(1)` per query (4 queries per iteration)
 - Node splitting and storage: `O(1)`
 
+*Note: Variance calculation is typically the bottleneck in quad-tree algorithms, but this implementation achieves O(1) variance queries by preprocessing the image into prefix sum matrices.*
+
 **3. Final Rendering: `O(W × H)`**
 - Traverse quad-tree and render pixels: `O(W × H)`
 
