@@ -86,6 +86,12 @@ This example demonstrates the speed and efficiency of the program. Notice how th
 | :---: | :---: | :---: |
 | original image, 6235 by 9353 pixels (6.91 MB) | 5,000 iterations, 6.8 seconds (2.52 MB) | 100,000 iterations, in 7.6 seconds (4.15 MB) |
 
+### GIF Example
+
+| ![](images/example3/fish.jpg) | ![](images/example3/fish-compressed-100-outline.jpg)| ![](images/example3/fish-compressed-1000.jpg) | ![](images/example3/fish-compressed-500-delta10.gif) |
+| :---: | :---: | :---: | :---: |
+| original gif | 100 iterations (outlined) | 1000 iterations | an animation of the process up to 500 iterations (delta 10 - 50 frames) |
+
 ## Installation
 
 ### From Source
