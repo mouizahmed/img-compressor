@@ -5,14 +5,10 @@ mod quad_tree;
 mod utils;
 
 use cli::parse_args;
-use gif::{Encoder as GifEncoder, Frame, Repeat};
-use image_processor::ImageData;
 use quad_tree::QuadTree;
-use std::fs::File;
-use std::io::BufWriter;
 use utils::{
-    default_output_file, ensure_valid_output_file, hex_to_rgb, print_failure, print_progress,
-    print_step, print_success,
+    default_output_file, ensure_valid_output_file, hex_to_rgb, load_image_data, print_step,
+    print_success, process_gif_compression, process_static_compression,
 };
 
 fn main() {
@@ -77,14 +73,9 @@ fn main() {
     println!();
 
     // Load image data
-    print_step("Loading image data");
-    let data = match ImageData::from_path(&args.input_file) {
-        Ok(data) => {
-            print_success();
-            data
-        }
+    let data = match load_image_data(&args.input_file) {
+        Ok(data) => data,
         Err(e) => {
-            print_failure();
             eprintln!("Error processing image: {}", e);
             std::process::exit(1);
         }
@@ -98,78 +89,27 @@ fn main() {
     // Process based on whether GIF output is requested
     match args.gif_delta {
         Some(delta) => {
-            println!(
-                "Generating animated GIF with {} total iterations...",
-                args.iterations
-            );
-            let mut frames = Vec::new();
-
-            // Initial frame
-            print_step("Rendering initial frame");
-            let buf = quad_tree.render_rgba(outline_rgb);
-            let width = buf.width() as u16;
-            let height = buf.height() as u16;
-            let mut raw_data = buf.into_raw();
-            frames.push(Frame::from_rgba_speed(width, height, &mut raw_data, 10));
-            print_success();
-
-            // Process iterations
-            for i in 1..=args.iterations {
-                print_progress(i as usize, args.iterations as usize, "Processing");
-
-                if let Err(err) = quad_tree.split_next() {
-                    println!("\n{}", err);
-                    std::process::exit(1);
-                }
-
-                if i % delta == 0 {
-                    let buf = quad_tree.render_rgba(outline_rgb);
-                    let mut raw_data = buf.into_raw();
-                    frames.push(Frame::from_rgba_speed(width, height, &mut raw_data, 10));
-                }
-            }
-
-            print_step("Encoding GIF");
-            let file = match File::create(&output_file) {
-                Ok(file) => file,
-                Err(_) => {
-                    print_failure();
-                    eprintln!("Unable to create output file");
-                    std::process::exit(1);
-                }
-            };
-            let writer = BufWriter::new(file);
-            let mut encoder =
-                GifEncoder::new(writer, frames[0].width, frames[0].height, &[]).unwrap();
-            encoder.set_repeat(Repeat::Infinite).unwrap();
-
-            for (i, frame) in frames.into_iter().enumerate() {
-                if encoder.write_frame(&frame).is_err() {
-                    print_failure();
-                    eprintln!("Error encoding gif frame {}", i);
-                    std::process::exit(1);
-                }
-            }
-            print_success();
-        }
-        None => {
-            println!("Processing {} iterations...", args.iterations);
-            for i in 1..=args.iterations {
-                print_progress(i as usize, args.iterations as usize, "Processing");
-
-                if let Err(err) = quad_tree.split_next() {
-                    println!("\n{}", err);
-                    std::process::exit(1);
-                }
-            }
-
-            print_step("Saving image");
-            if let Err(err) = quad_tree.render_rgb(outline_rgb).save(&output_file) {
-                print_failure();
-                eprintln!("Error saving image: {}", err);
+            if let Err(e) = process_gif_compression(
+                &mut quad_tree,
+                args.iterations,
+                delta,
+                outline_rgb,
+                &output_file,
+            ) {
+                eprintln!("Error during GIF compression: {}", e);
                 std::process::exit(1);
             }
-            print_success();
+        }
+        None => {
+            if let Err(e) = process_static_compression(
+                &mut quad_tree,
+                args.iterations,
+                outline_rgb,
+                &output_file,
+            ) {
+                eprintln!("Error during static compression: {}", e);
+                std::process::exit(1);
+            }
         }
     }
 
