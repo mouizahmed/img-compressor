@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/48412f55-83f8-4447-abed-4b5e09fdf3a4
 
 ### Images with outlines
 
-The algorithm prioritizes splitting up regions covering the cat and its fur, which have more detail and color variation compared to the uniform background.
+The following images with outlines shows how the algorithm prioritizes splitting up regions with the highest color variance first. Notice how the algorithm prioritizes splitting regions covering the cat's fur and facial features, as well as the more detailed and colorful areas of the background, while leaving the uniform, solid-colored background sections as large unsplit blocks.
 
 | ![](images/example1/cat-compressed-10-outline.jpg) | ![](images/example1/cat-compressed-100-outline.jpg) | ![](images/example1/cat-compressed-1000-outline.jpg) |
 | :---: | :---: | :---: |
@@ -37,7 +37,7 @@ The algorithm prioritizes splitting up regions covering the cat and its fur, whi
 
 ### Speed + Size
 
-This example demonstrates the speed and efficiency of the program.
+This example demonstrates the speed and efficiency of the program. Notice how the speed of the program scales efficiently with processing 20x more iterations only taking 12% longer, demonstrating the algorithms logarithmic time complexity. Additionally, more iterations produce higher quality results with larger file sizes due to the additional quad-tree subdivisions.
 
 | ![](images/example2/city.jpg) | ![](images/example2/city-compressed-5000.jpg) | ![](images/example2/city-compressed-100000.jpg) |
 | :---: | :---: | :---: |
